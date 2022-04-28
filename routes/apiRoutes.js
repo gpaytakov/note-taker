@@ -27,4 +27,23 @@ router.post('/notes', (req, res) => {
     return res.json(newNote);
 })
 
+// delete a note
+router.delete('/notes/:id', (req, res) => {
+    const pathToJson = path.join(__dirname, '../db/db.json');
+    
+    for (let i=0; i<notes.length; i++) {
+        if (notes[i].id == req.params.id) {
+            // The splice() method changes the contents of an array by removing or replacing existing elements and/or adding new elements in place
+            notes.splice(i, 1);
+            break;
+        }
+    }
+    // this write updates db.json file after deleting the note with requested id
+    fs.writeFile(pathToJson, JSON.stringify(notes), error => {
+        (error) ? console.log(error) : console.log('Requested note is deleted.');
+    })
+    return res.json(notes);
+
+})
+
 module.exports = router;
