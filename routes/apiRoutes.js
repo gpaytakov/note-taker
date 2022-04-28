@@ -12,7 +12,12 @@ router.get('/notes', (req, res) => {
 router.post('/notes', (req, res) => {
     const pathToJson = path.join(__dirname, '../db/db.json');
     let newNote = req.body;
-    
+    /*sets id to new note, checks for ids and sets one bigger than the max
+      this will ensure when we delete the notes, new note will never gets the same id*/
+      let notesIds = notes.map(note => note.id);
+      let max = notesIds.reduce((a, b) => Math.max(a,b), -Infinity);
+      newNote.id = max+1;
+      // adds new note to db.json
     notes.push(newNote);
     
     fs.writeFile(pathToJson, JSON.stringify(notes), error => {
